@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord - Iniciar Sesión</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #5865F2 0%, #3B4CF2 50%, #7289DA 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Animated background elements */
+        .background-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 120px;
+            height: 120px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            left: 15%;
+            animation-delay: 2s;
+        }
+
+        .orb-3 {
+            width: 60px;
+            height: 60px;
+            top: 30%;
+            right: 20%;
+            animation-delay: 4s;
+        }
+
+        .orb-4 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            right: 15%;
+            animation-delay: 1s;
+        }
+
+        .star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .star-1 { top: 15%; left: 25%; animation-delay: 0s; }
+        .star-2 { top: 25%; right: 30%; animation-delay: 1s; }
+        .star-3 { top: 70%; left: 20%; animation-delay: 2s; }
+        .star-4 { bottom: 30%; right: 25%; animation-delay: 0.5s; }
+        .star-5 { top: 40%; left: 80%; animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.7; }
+            50% { transform: translateY(-20px) rotate(5deg); opacity: 1; }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Header */
+        .header {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .discord-logo {
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #5865F2;
+            font-size: 18px;
+        }
+
+        .discord-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            display: flex;
+            background: rgba(54, 57, 63, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            overflow: hidden;
+            max-width: 784px;
+            width: 100%;
+        }
+
+        .login-form {
+            flex: 1;
+            padding: 32px;
+            max-width: 400px;
+        }
+
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .login-subtitle {
+            color: #B9BBBE;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #B9BBBE;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            background: #40444B;
+            border: 1px solid #40444B;
+            border-radius: 3px;
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #5865F2;
+        }
+
+        .forgot-password {
+            color: #00AFF4;
+            text-decoration: none;
+            font-size: 14px;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            background: #5865F2;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 3px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .login-button:hover {
+            background: #4752C4;
+        }
+
+        .register-link {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #72767D;
+        }
+
+        .register-link a {
+            color: #00AFF4;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* QR Code section */
+        .qr-section {
+            flex: 1;
+            background: rgba(47, 49, 54, 0.8);
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .qr-code {
+            width: 176px;
+            height: 176px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .qr-pattern {
+            width: 160px;
+            height: 160px;
+            background-image: 
+                repeating-linear-gradient(0deg, #000 0px, #000 8px, transparent 8px, transparent 16px),
+                repeating-linear-gradient(90deg, #000 0px, #000 8px, transparent 8px, transparent 16px),
+                linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%);
+            background-size: 16px 16px, 16px 16px, 32px 32px;
+            position: relative;
+        }
+
+        .qr-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            background: #5865F2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .qr-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .qr-subtitle {
+            color: #B9BBBE;
+            margin-bottom: 4px;
+            font-size: 16px;
+        }
+
+        .qr-description {
+            color: #72767D;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .qr-alternative {
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .qr-alternative a {
+            color: #00AFF4;
+            text-decoration: none;
+        }
+
+        .qr-alternative a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            .qr-section {
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="background-animation">
+        <div class="floating-orb orb-1"></div>
+        <div class="floating-orb orb-2"></div>
+        <div class="floating-orb orb-3"></div>
+        <div class="floating-orb orb-4"></div>
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="star star-4"></div>
+        <div class="star star-5"></div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="discord-logo">💙</div>
+        <div class="discord-text">Discord</div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="login-container">
+            <!-- Login Form -->
+            <div class="login-form">
+                <h1 class="login-title">¡Hola de nuevo!</h1>
+                <p class="login-subtitle">¡Nos alegramos mucho de volver a verte!</p>
+                
+                <form>
+                    <div class="form-group">
+                        <label class="form-label">CORREO ELECTRÓNICO O NÚMERO DE TELÉFONO *</label>
+                        <input type="text" class="form-input">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">CONTRASEÑA *</label>
+                        <input type="password" class="form-input">
+                        <a href="#" class="forgot-password">¿Has olvidado la contraseña?</a>
+                    </div>
+                    
+                    <button type="submit" class="login-button">Iniciar sesión</button>
+                </form>
+                
+                <p class="register-link">
+                    ¿Necesitas una cuenta? <a href="#">Registrarse</a>
+                </p>
+            </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <div class="qr-code">
+                    <div class="qr-pattern">
+                        <div class="qr-logo">💙</div>
+                    </div>
+                </div>
+                
+                <h2 class="qr-title">Iniciar sesión con código QR</h2>
+                <p class="qr-subtitle">Escanéalo con la <strong>aplicación de móvil de Discord</strong> para iniciar sesión de forma instantánea.</p>
+                
+                <p class="qr-alternative">
+                    O <a href="#">inicia sesión con una clave de acceso</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add more dynamic floating animation
+        function createFloatingElement() {
+            const element = document.createElement('div');
+            element.className = 'floating-orb';
+            element.style.width = Math.random() * 40 + 20 + 'px';
+            element.style.height = element.style.width;
+            element.style.left = Math.random() * 100 + '%';
+            element.style.top = Math.random() * 100 + '%';
+            element.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            element.style.animationDelay = Math.random() * 2 + 's';
+            element.style.opacity = Math.random() * 0.3 + 0.1;
+            
+            document.querySelector('.background-animation').appendChild(element);
+            
+            setTimeout(() => {
+                element.remove();
+            }, 8000);
+        }
+
+        // Create new floating elements periodically
+        setInterval(createFloatingElement, 3000);
+
+        // Form interactions
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.borderColor = '#5865F2';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.borderColor = '#40444B';
+            });
+        });
+
+        document.querySelector('.login-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            this.style.background = '#4752C4';
+            setTimeout(() => {
+                this.style.background = '#5865F2';
+            }, 150);
+        });
+    </script>
+</body>
+</html>
